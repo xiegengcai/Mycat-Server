@@ -161,8 +161,7 @@ public abstract class Connection implements ClosableConnection{
 	}
 
 	private ByteBuffer allocate() {
-		ByteBuffer buffer = NetSystem.getInstance().getBufferPool().allocate();
-		return buffer;
+		return NetSystem.getInstance().getBufferPool().allocate();
 	}
 
 	private final void recycle(ByteBuffer buffer) {
@@ -553,7 +552,7 @@ public abstract class Connection implements ClosableConnection{
 				if (written > 0) {
 					netOutBytes += written;
 					NetSystem.getInstance().addNetOutBytes(written);
-
+					lastWriteTime = TimeUtil.currentTimeMillis();
 				} else {
 					break;
 				}
@@ -667,7 +666,7 @@ public abstract class Connection implements ClosableConnection{
 			} catch (Throwable e) {
 			}
 			boolean closed = isSocketClosed && (!channel.isOpen());
-			if (closed == false) {
+			if (!closed) {
 				LOGGER.warn("close socket of connnection failed " + this);
 			}
 
